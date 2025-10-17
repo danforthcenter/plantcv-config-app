@@ -27,13 +27,13 @@
               <h3>Configure Inputs and Outputs</h3><br>
 	      <!-- Config fields controlling Inputs/Outputs -->
 	      <!-- input_dir -->
-              <div class="tooltip">
+              <div class="tooltip required-field">
 		<label>input_dir:</label>
 		<input type="text" name="input_dir" placeholder="path to input data" required>
 		<span class="tooltiptext"> Path to Image data, this will be relative to where you run plantcv-run-workflow.</span>
               </div><br><br>
 	      <!-- workflow -->
-	      <div class="tooltip">
+	      <div class="tooltip required-field">
 		<label>workflow:</label>
 		<input type="text" name="workflow" placeholder="your-python-script.py" required>
 		<span class="tooltiptext"> Filepath to your PlantCV Workflow script.</span>
@@ -100,23 +100,23 @@
 		<input type="text" name="imgformat" value="all" required>
 		<span class="tooltiptext"> Image file extensions to use, defaults to "all" which is a special case including all images</span>
 	      </div><br><br>
+	      <!-- timestampformat -->
+	      <div class="tooltip">
+		<label>timestampformat:</label>&#x1F6C8;
+		<input type="text" name="timestampformat" value="%Y-%m-%dT%H:%M:%S.%fZ" required>
+      		<span class="tooltiptext"> strftime format to use parsing dates/datetimes from metadata/filenames</span>
+	      </div><br><br>
 	      <!-- start_date -->
 	      <div class="tooltip">
 		<label>start_date:</label>
-		<input type="text" name="start_date" value="null" required>
+		<input type="datetime-local" name="start_date" value="null" required>
 		<span class="tooltiptext"> Only include photos taken after this datetime.</span>
 	      </div><br><br>
 	      <!-- end_date -->
 	      <div class="tooltip">
 		<label>end_date:</label>
-		<input type="text" name="end_date" value="null" required>
+		<input type="datetime-local" name="end_date" value="null" required>
       		<span class="tooltiptext"> Only include photos taken before this datetime.</span>
-	      </div><br><br>
-	      <!-- timestampformat -->
-	      <div class="tooltip">
-		<label>timestampformat:</label>
-		<input type="text" name="timestampformat" value="%Y-%m-%dT%H:%M:%S.%fZ" required>
-      		<span class="tooltiptext"> strftime format to use parsing dates/datetimes from metadata/filenames</span>
 	      </div><br><br>
 	      <!-- Close filter box -->
 	    </div>
