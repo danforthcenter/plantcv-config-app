@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_file, url_for
 from plantcv.parallel import WorkflowConfig
+from datetime import datetime
+import pytz
 import json
 import io
 import os
@@ -51,10 +53,36 @@ def parse_app_input(key, value, list_attrs, dict_attrs, int_attrs, bool_attrs):
         out = value
     return key, out
 
+def handle_input_datetimes(tz_selection, start_date, end_date, timestamp_format):
+    """Parse time related inputs from calendar menus
+    Parameters
+    ----------
+    tz_selection     = str, a pytz timezone
+    start_date       = str, start date as formatted by html datetime-local ('%Y-%m-%dT%H:%M')
+    end_date         = str, start date as formatted by html datetime-local ('%Y-%m-%dT%H:%M')
+    timestamp_format = str, target timestamp format
+
+    Returns
+    -------
+    start_date      = str, start date adjusted to time zone selection in timestamp_format
+    end_date        = str, end date adjusted to time zone selection in timestamp_format
+    """
+    if start_date != "null":
+        tzstamp = datetime.strptime(start_date, "%Y-%m-%dT%H:%M")
+        start_date = str(pytz.timezone(tz_selection).localize(tzstamp).strftime(timestamp_format))
+    if end_date != "null":
+        tzstamp = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")
+        end_date = str(pytz.timezone(tz_selection).localize(tzstamp).strftime(timestamp_format))
+    return start_date, end_date
+
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    timezones = pytz.common_timezones
+    default_tz = request.headers.get('X-Timezone') or 'UTC'
+    timezones.insert(0, default_tz)
+
     if request.method == 'POST':
         # Collect all form data into a dictionary
         data = request.form.to_dict()
@@ -62,6 +90,16 @@ def index():
         config = WorkflowConfig()
         object.__setattr__(config, "verbose", False)
         json_data = json.loads(json.dumps(data, indent=4))
+        # before going to for loop this should handle timestamps/time formatting
+        new_start_date, new_end_date = handle_input_datetimes(
+            json_data.get("tz_selection"),
+            json_data.get("start_date"),
+            json_data.get("end_date"),
+            json_data.get("timestampformat")
+        )
+        json_data["start_date"] = new_start_date
+        json_data["end_date"] = new_end_date
+
         for key, value in json_data.items():
             key, out = parse_app_input(key, value,
                                        list_attrs, dict_attrs,
@@ -86,7 +124,8 @@ def index():
             download_name='config.json'
         )
     # Render HTML form for GET requests
-    return render_template("config_app_template.html")
+    return render_template("config_app_template.html",
+                           tz_formats=timezones)
 
 if __name__ == '__main__':
     app.run(debug=True)
