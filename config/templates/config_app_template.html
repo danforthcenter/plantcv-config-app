@@ -31,7 +31,13 @@
 		<label>input_dir:</label>
 		<input type="text" name="input_dir" placeholder="path to input data" required>
 		<span class="tooltiptext"> Path to Image data, this will be relative to where you run plantcv-run-workflow.</span>
-              </div><br><br>
+              </div>
+	      <!-- include_all_subdirs -->
+	      <div class="tooltip">	
+		<label>include_all_subdirs:</label>
+		<input type="checkbox" name="include_all_subdirs" value="true" checked required>
+      		<span class="tooltiptext"> Boolean, Should all subdirectories be included when finding images?</span>
+	      </div><br><br>
 	      <!-- workflow -->
 	      <div class="tooltip required-field">
 		<label>workflow:</label>
@@ -55,24 +61,6 @@
 		<label>delimiter:</label>
 		<input type="text" name="delimiter" value="_" required>
 		<span class="tooltiptext"> Delimiter in file names between metadata terms</span>
-	      </div><br><br>
-	      <!-- img_outdir -->
-	      <div class="tooltip">
-		<label>img_outdir:</label>
-		<input type="text" name="img_outdir" value="." required>
-		<span class="tooltiptext"> If images are written save them here</span>
-	      </div><br><br>
-	      <!-- tmp directory -->
-	      <div class="tooltip">
-		<label>tmp_dir:</label>
-		<input type="text" name="tmp_dir" value="." required>
-      		<span class="tooltiptext"> Path to a temporary directory (default is to make on in the cwd)</span>
-	      </div><br><br>
-	      <!-- include_all_subdirs -->
-	      <div class="tooltip">	
-		<label>include_all_subdirs:</label>
-		<input type="checkbox" name="include_all_subdirs" value="true" checked required>
-      		<span class="tooltiptext"> Boolean, Should all subdirectories be included when finding images?</span>
 	      </div><br><br>
 	    <!-- close input output box -->
 	    </div>
@@ -100,24 +88,33 @@
 		<input type="text" name="imgformat" value="all" required>
 		<span class="tooltiptext"> Image file extensions to use, defaults to "all" which is a special case including all images</span>
 	      </div><br><br>
+
+	      <details>
+		<summary><b>Timestamp based filtering</b></summary>
+		<p>
+		  Filtering on image timestamp can be done using start and end times,
+		  <br>keeping images within that range.<br>
+		  For more granular filtering we recommend using <code>metadata regex</code> instead.
+		</p>
 	      <!-- timestampformat -->
-	      <div class="tooltip">
-		<label>timestampformat:</label>&#x1F6C8;
-		<input type="text" name="timestampformat" value="%Y-%m-%dT%H:%M:%S.%fZ" required>
-      		<span class="tooltiptext"> strftime format to use parsing dates/datetimes from metadata/filenames</span>
-	      </div><br><br>
-	      <!-- start_date -->
-	      <div class="tooltip">
-		<label>start_date:</label>
-		<input type="text" name="start_date" value="null" required>
-		<span class="tooltiptext"> Only include photos taken after this datetime.</span>
-	      </div><br><br>
-	      <!-- end_date -->
-	      <div class="tooltip">
-		<label>end_date:</label>
-		<input type="text" name="end_date" value="null" required>
-      		<span class="tooltiptext"> Only include photos taken before this datetime.</span>
-	      </div><br><br>
+		<div class="tooltip">
+		  <label>timestampformat:</label>&#x1F6C8;
+		  <input type="text" name="timestampformat" value="%Y-%m-%dT%H:%M:%S.%fZ" required>
+      		  <span class="tooltiptext"> strftime format to use parsing dates/datetimes from metadata/filenames</span>
+		</div><br><br>
+		<!-- start_date -->
+		<div class="tooltip">
+		  <label>start_date:</label>
+		  <input type="text" name="start_date" value="null" required>
+		  <span class="tooltiptext"> Only include photos taken after this datetime.</span>
+		</div><br><br>
+		<!-- end_date -->
+		<div class="tooltip">
+		  <label>end_date:</label>
+		  <input type="text" name="end_date" value="null" required>
+      		  <span class="tooltiptext"> Only include photos taken before this datetime.</span>
+		</div><br><br>
+	      </details>
 	      <!-- Close filter box -->
 	    </div>
 	  </div> 
@@ -159,44 +156,52 @@
 		<label>n_workers (number of jobs in parallel at once):</label>
 		<input type="number" name="n_workers" value="1" min="1" required>
 		<span class="tooltiptext"> Number of workers to run in parallel at once.</span>
-	      </div><br>
+	      </div><br><br>
+	      <details>
+		<summary><b>Additional Parallelization Options</b></summary>
+		<p>
+		  Most parallelization needs are handled by <code>n_workers</code>,
+		  which determines how many jobs can run at once.</br>
+		  These additional parameters are used less frequently.
+		</p>
 	      <!-- cores per worker -->
-	      <div class="tooltip">
-		<label>cores per worker:</label>
-		<input type="number" name="cores" value="1" min="1" required>
-		<span class="tooltiptext"> Number of cores that each worker should use, this should almost always be 1.</span>
-	      </div><br>
-	      <!-- memory per worker -->
-	      <div class="tooltip">
-		<label>memory per worker:</label>
-		<input type="text" name="memory" value="1GB" required>
-		<span class="tooltiptext"> Amount of memory each worker should have, generally 1GB is plenty.</span>
-	      </div><br>
-	      <!-- disk per worker -->
-	      <div class="tooltip">
-		<label>disk per worker:</label>
-		<input type="text" name="disk" value="1GB" required>
-		<span class="tooltiptext"> Amount of disk memory each worker should have, generally 1GB is plenty.</span>
-	      </div><br>
-	      <!-- log directory -->
-	      <div class="tooltip">
-		<label>log directory:</label>
-		<input type="text" name="log_directory" value="null" required>
-		<span class="tooltiptext"> Path, where to write log files.</span>
-	      </div><br>
-	      <!-- local directory -->
-	      <div class="tooltip">
-		<label>local directory:</label>
-		<input type="text" name="local_directory" value="null" required>
-		<span class="tooltiptext"> Dask working directory location.</span>
-	      </div><br>
-	      <!-- extra directives -->
-	      <div class="tooltip">
-		<label>job extra directives:</label>
-		<input type="text" name="job_extra_directives" value="null" required>
-		<span class="tooltiptext"> Any other parameters sent to the scheduler, specified as "key:val, key2:val2, ...".
-		  <br>{"getenv": "true"} is common to use a conda env for each job.</span>
-	      </div><br>
+		<div class="tooltip">
+		  <label>cores per worker:</label>
+		  <input type="number" name="cores" value="1" min="1" required>
+		  <span class="tooltiptext"> Number of cores that each worker should use, this should almost always be 1.</span>
+		</div><br>
+		<!-- memory per worker -->
+		<div class="tooltip">
+		  <label>memory per worker:</label>
+		  <input type="text" name="memory" value="1GB" required>
+		  <span class="tooltiptext"> Amount of memory each worker should have, generally 1GB is plenty.</span>
+		</div><br>
+		<!-- disk per worker -->
+		<div class="tooltip">
+		  <label>disk per worker:</label>
+		  <input type="text" name="disk" value="1GB" required>
+		  <span class="tooltiptext"> Amount of disk memory each worker should have, generally 1GB is plenty.</span>
+		</div><br>
+		<!-- log directory -->
+		<div class="tooltip">
+		  <label>log directory:</label>
+		  <input type="text" name="log_directory" value="null" required>
+		  <span class="tooltiptext"> Path, where to write log files.</span>
+		</div><br>
+		<!-- local directory -->
+		<div class="tooltip">
+		  <label>local directory:</label>
+		  <input type="text" name="local_directory" value="null" required>
+		  <span class="tooltiptext"> Dask working directory location.</span>
+		</div><br>
+		<!-- extra directives -->
+		<div class="tooltip">
+		  <label>job extra directives:</label>
+		  <input type="text" name="job_extra_directives" value="null" required>
+		  <span class="tooltiptext"> Any other parameters sent to the scheduler, specified as "key:val, key2:val2, ...".
+		    <br>{"getenv": "true"} is common to use a conda env for each job.</span>
+		</div><br>
+	      </details>
 	    <!-- Close parallel box -->
 	    </div>
 	    <div id="general_box">
@@ -207,25 +212,37 @@
 		<label>checkpoint:</label>
 		<input type="checkbox" name="checkpoint" value="true" checked>
 		<span class="tooltiptext"> Boolean, should checkpointing be done in case of an error.</span>
-	      </div>
+	      </div><br>
 	      <!-- Bool Cleanup -->
 	      <div class="tooltip">
 		<label>cleanup:</label>
 		<input type="checkbox" name="cleanup" value="true" checked>
 		<span class="tooltiptext"> Boolean, should temp files be deleted after a successful run?</span>
-	      </div>
+	      </div><br>
 	      <!-- Bool Append -->
 	      <div class="tooltip">
 		<label>append:</label>
 		<input type="checkbox" name="append" value="true">
 		<span class="tooltiptext"> Boolean, should these results be appended to the results json file?</span>
-	      </div>
+	      </div><br>
 	      <!-- Bool Verbose -->
 	      <div class="tooltip">
 		<label>verbose:</label>
 		<input type="checkbox" name="verbose" value="true" checked>
 		<span class="tooltiptext"> Boolean, controls level of printed output.</span>
-	      </div>
+	      </div><br><br>
+	      <!-- img_outdir -->
+	      <div class="tooltip">
+		<label>img_outdir:</label>
+		<input type="text" name="img_outdir" value="." required>
+		<span class="tooltiptext"> If images are written save them here</span>
+	      </div><br><br>
+	      <!-- tmp directory -->
+	      <div class="tooltip">
+		<label>tmp_dir:</label>
+		<input type="text" name="tmp_dir" value="." required>
+      		<span class="tooltiptext"> Path to a temporary directory (default is to make on in the cwd)</span>
+	      </div><br><br>
 	      <!-- other args -->
 	      <div class="tooltip">
 		<label>other_args:</label>
